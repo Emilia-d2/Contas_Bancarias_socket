@@ -33,7 +33,7 @@ public class ClienteBanco extends Thread {
         try {
 
             Socket conexao = new Socket("localhost", 40000);
-            System.out.println("Conectando em minha conta bancária... ");
+            System.out.println("Conectado em minha conta bancária... ");
             Thread t = new ClienteBanco(conexao);
             t.start();
 
