@@ -55,16 +55,8 @@ public class ClienteBanco extends Thread {
             
             
             
-            int opcao;
-            this.entradaDados = new Scanner(System.in);
-            System.out.println("--------------------------");
-            System.out.println(" 0 - Sair                 |");
-            System.out.println(" 1 - Deposito             |");
-            System.out.println(" 2 - Saque                |");
-            System.out.println(" 3 - Consulta extrato     |");
-            System.out.println("--------------------------");
-            System.out.println("Digite a opção: ");
-            opcao = this.entradaDados.nextInt();
+            int opcao = 1;
+            
 
 //            String escolha;
 //            Scanner ler = new Scanner(System.in);
@@ -72,31 +64,42 @@ public class ClienteBanco extends Thread {
 //            escolha = ler.next();
             
             while(opcao != 0) {
+                this.entradaDados = new Scanner(System.in);
+                System.out.println("--------------------------");
+                System.out.println(" 0 - Sair                 |");
+                System.out.println(" 1 - Deposito             |");
+                System.out.println(" 2 - Saque                |");
+                System.out.println(" 3 - Consulta extrato     |");
+                System.out.println("--------------------------");
+                System.out.println("Digite a opção: ");
+                opcao = this.entradaDados.nextInt();
                 
                if(opcao == 1){
                     deposito();
-                    break;
+                   
                }
-               else if(opcao == 2){
+               if(opcao == 2){
                    deposito();
-                   break;
+                   
                }
-               else if(opcao == 3){
+               if(opcao == 3){
                    extrato();
+                   
+               }
+                if(opcao == 0){
+                   
                    break;
                }
-               else{
-               break;
-               }
+                String digito = mensagem(agencia, conta, nome, cpf);
+                saida.writeUTF(digito);
+                saida.flush();
+
+                entrada = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
+                entrada.readLine();
             }
             
            
-            String digito = mensagem(agencia, conta, nome, cpf);
-            saida.writeUTF(digito);
-            saida.flush();
-
-            entrada = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
-            entrada.readLine();
+           
         } catch (IOException e) {
             System.out.println("IOException" + e);
         } finally {
@@ -171,6 +174,6 @@ public class ClienteBanco extends Thread {
     }
     
     public String mensagem(String agencia, String conta, String nome, String cpf){
-        return "\n Agência: " + this.agencia + "; \n" + "N° conta: " + this.conta + "; \n" + "Nome CLiente: " + this.nome + "; \n" + "CPF: " + this.cpf + ";";
+        return "\nAgência: " + this.agencia + "; \n" + "N° conta: " + this.conta + "; \n" + "Nome CLiente: " + this.nome + "; \n" + "CPF: " + this.cpf + ";";
     }
 }

@@ -186,6 +186,6 @@ public class GerenteAgencia extends Thread {
     }
     
     public String mensagem(String conta, String descricao){
-        return "\nAgência n° Conta: " + this.conta + "; \n" + "Descição: " + this.descricao + "; \n";
+        return "\nAgência 0226 - n° Conta: " + this.conta + "; \n" + "Descição: " + this.descricao + "; \n";
     }
 }
