@@ -67,10 +67,12 @@ public class ClienteBanco extends Thread {
                 
                if(opcao == 1){
                     deposito();
+                    System.out.println("Depósito realizado com sucesso!");
                    
                }
                if(opcao == 2){
                    deposito();
+                   System.out.println("Saque realizado com sucesso!");
                    
                }
                if(opcao == 3){
@@ -117,6 +119,7 @@ public class ClienteBanco extends Thread {
             this.cpf = this.entradaDados.next();
             System.out.println("Informe o valor para deposito: ");
             this.deposito = this.entradaDados.nextFloat();
+            valorTotal = deposito;
             mensagem(this.agencia, this.conta, this.nome, this.cpf);
            
         } catch (Exception e) {
@@ -135,8 +138,9 @@ public class ClienteBanco extends Thread {
             this.nome = this.entradaDados.next();
             System.out.println("Informe seu CPF: ");
             this.cpf = this.entradaDados.next();
-            System.out.println("Informe o valor para deposito: ");
+            System.out.println("Informe o valor que deseja Sacar: ");
             this.saque = this.entradaDados.nextFloat();
+            valorTotal = valorTotal - saque;
             mensagem(this.agencia, this.conta, this.nome, this.cpf);
            
 
@@ -157,6 +161,7 @@ public class ClienteBanco extends Thread {
             System.out.println("Informe seu CPF: ");
             this.cpf = this.entradaDados.next();
             mensagem(this.agencia, this.conta, this.nome, this.cpf);
+            System.out.println("Seu saldo é: " + valorTotal);
           
 
         } catch (Exception e) {

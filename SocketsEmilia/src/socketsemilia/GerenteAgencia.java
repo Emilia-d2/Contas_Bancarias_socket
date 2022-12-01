@@ -9,6 +9,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -20,6 +22,7 @@ public class GerenteAgencia extends Thread {
     
     private Scanner entradaDados;
     public String conta;
+    List contas = new ArrayList();
     public String descricao;
     DataOutputStream saida;
     BufferedReader teclado;
@@ -182,4 +185,15 @@ public class GerenteAgencia extends Thread {
     public String mensagem(String conta, String descricao){
         return "\nAgência 0226 - n° Conta: " + this.conta + "; \n" + "Descição: " + this.descricao + "; \n";
     }
+
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+    
+    
 }
