@@ -47,6 +47,10 @@ public class ClienteBanco extends Thread {
         conexao = conta;
     }
 
+    ClienteBanco() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 
     public void run() {
         try {
@@ -71,7 +75,7 @@ public class ClienteBanco extends Thread {
                    
                }
                if(opcao == 2){
-                   deposito();
+                   saque();
                    System.out.println("Saque realizado com sucesso!");
                    
                }
@@ -83,7 +87,7 @@ public class ClienteBanco extends Thread {
                    
                    break;
                }
-                String digito = mensagem(agencia, conta, nome, cpf);
+                String digito = mensagem("226", conta, nome, cpf);
                 saida.writeUTF(digito);
                 saida.flush();
 
@@ -109,8 +113,6 @@ public class ClienteBanco extends Thread {
     public void deposito() {
         try {
             this.entradaDados = new Scanner(System.in);
-            System.out.println("Informe sua agência bancária: ");
-            this.agencia = this.entradaDados.next();
             System.out.println("Informe a conta bancaria: ");
             this.conta = this.entradaDados.next();
             System.out.println("Informe seu nome: ");
@@ -130,8 +132,6 @@ public class ClienteBanco extends Thread {
     public void saque() {
         try {
            this.entradaDados = new Scanner(System.in);
-            System.out.println("Informe sua agência bancária: ");
-            this.agencia = this.entradaDados.next();
             System.out.println("Informe a conta bancaria: ");
             this.conta = this.entradaDados.next();
             System.out.println("Informe seu nome: ");
@@ -152,8 +152,6 @@ public class ClienteBanco extends Thread {
     public void extrato() {
         try {
            this.entradaDados = new Scanner(System.in);
-            System.out.println("Informe sua agência bancária: ");
-            this.agencia = this.entradaDados.next();
             System.out.println("Informe a conta bancaria: ");
             this.conta = this.entradaDados.next();
             System.out.println("Informe seu nome: ");
