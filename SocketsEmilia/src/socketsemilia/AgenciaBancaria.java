@@ -46,16 +46,14 @@ public class AgenciaBancaria extends Thread {
     public void run() {
 
         try {
-
+            while(true){
             DataInputStream entrada = new DataInputStream(conexao.getInputStream());
             DataOutputStream saida = new DataOutputStream(conexao.getOutputStream());
 
             String clientedigitou = entrada.readUTF();
             System.out.println("Gerente Digitou: " + clientedigitou);
             saida.writeUTF(clientedigitou);
-
-
-
+            }
 
         } catch (IOException e) {
             System.out.println("IOException " + e);

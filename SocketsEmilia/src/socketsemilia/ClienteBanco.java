@@ -53,16 +53,7 @@ public class ClienteBanco extends Thread {
             saida = new DataOutputStream(conexao.getOutputStream());
             teclado = new BufferedReader(new InputStreamReader(System.in));
             
-            
-            
             int opcao = 1;
-            
-
-//            String escolha;
-//            Scanner ler = new Scanner(System.in);
-//            System.out.println("Digite sim para continuar:");
-//            escolha = ler.next();
-            
             while(opcao != 0) {
                 this.entradaDados = new Scanner(System.in);
                 System.out.println("--------------------------");
@@ -174,6 +165,6 @@ public class ClienteBanco extends Thread {
     }
     
     public String mensagem(String agencia, String conta, String nome, String cpf){
-        return "\nAgência: " + this.agencia + "; \n" + "N° conta: " + this.conta + "; \n" + "Nome CLiente: " + this.nome + "; \n" + "CPF: " + this.cpf + ";";
+        return "\nAgência: " + this.agencia + "; \n" + "N° conta: " + this.conta + "; \n" + "Nome CLiente: " + this.nome + "; \n" + "CPF: " + this.cpf + ";\n";
     }
 }

@@ -46,7 +46,8 @@ public class ContaBancaria extends Thread {
     public void run() {
 
         try {
-
+            while(true){
+            
             DataInputStream entrada = new DataInputStream(conexao.getInputStream());
             DataOutputStream saida = new DataOutputStream(conexao.getOutputStream());
 
@@ -54,6 +55,9 @@ public class ContaBancaria extends Thread {
             System.out.println("Cliente Digitou: " + clientedigitou);
             saida.writeUTF(clientedigitou);
             saida.flush();
+        }
+
+           
 
 
         } catch (IOException e) {

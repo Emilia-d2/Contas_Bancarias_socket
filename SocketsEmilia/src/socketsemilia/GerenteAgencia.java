@@ -49,50 +49,44 @@ public class GerenteAgencia extends Thread {
             saida = new DataOutputStream(conexao.getOutputStream());
             teclado = new BufferedReader(new InputStreamReader(System.in));
             
-            int opcao;
-            this.entradaDados = new Scanner(System.in);
-
-            System.out.println("---------------------------");
-            System.out.println(" 0 - Sair                  |");
-            System.out.println(" 1 - Nova Conta            |");
-            System.out.println(" 2 - Consulta Conta        |");
-            System.out.println(" 3 - Atualizar Conta       |");
-            System.out.println(" 4 - Deletar Conta         |");
-            System.out.println("---------------------------");
-            System.out.println("Digite a opção ==> ");
-            opcao = this.entradaDados.nextInt();
-            
-            
+            int opcao = 1;
             while(opcao != 0) {
+                this.entradaDados = new Scanner(System.in);
+                System.out.println("---------------------------");
+                System.out.println(" 0 - Sair                  |");
+                System.out.println(" 1 - Nova Conta            |");
+                System.out.println(" 2 - Consulta Conta        |");
+                System.out.println(" 3 - Atualizar Conta       |");
+                System.out.println(" 4 - Deletar Conta         |");
+                System.out.println("---------------------------");
+                System.out.println("Digite a opção ==> ");
+                opcao = this.entradaDados.nextInt();
                 
                if(opcao == 1){
                     criaConta();
-                    break;
                }
-               else if(opcao == 2){
+                if(opcao == 2){
                    consultaConta();
-                   break;
                }
-               else if(opcao == 3){
+               if(opcao == 3){
                    atualizaConta();
-                   break;
                }
-               else if(opcao == 4){
+               if(opcao == 4){
                    deletarConta();
-                   break;
                }
-               else{
+               if(opcao == 0){
                break;
                }
+               String digito = mensagem(conta, descricao);
+                saida.writeUTF(digito);
+                saida.flush();
+
+                entrada = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
+                entrada.readLine();
             }
                 
             
-            String digito = mensagem(conta, descricao);
-            saida.writeUTF(digito);
-            saida.flush();
-
-            entrada = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
-            entrada.readLine();
+            
         } catch (IOException e) {
             System.out.println("IOException" + e);
         } finally {
