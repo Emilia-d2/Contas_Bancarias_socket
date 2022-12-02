@@ -47,11 +47,6 @@ public class ClienteBanco extends Thread {
         conexao = conta;
     }
 
-    ClienteBanco() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-
     public void run() {
         try {
             saida = new DataOutputStream(conexao.getOutputStream());
@@ -87,7 +82,7 @@ public class ClienteBanco extends Thread {
                    
                    break;
                }
-                String digito = mensagem("226", conta, nome, cpf);
+                String digito = mensagem(agencia, conta, nome, cpf);
                 saida.writeUTF(digito);
                 saida.flush();
 
@@ -122,7 +117,7 @@ public class ClienteBanco extends Thread {
             System.out.println("Informe o valor para deposito: ");
             this.deposito = this.entradaDados.nextFloat();
             valorTotal = deposito;
-            mensagem(this.agencia, this.conta, this.nome, this.cpf);
+            mensagem("0226", this.conta, this.nome, this.cpf);
            
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,8 +135,13 @@ public class ClienteBanco extends Thread {
             this.cpf = this.entradaDados.next();
             System.out.println("Informe o valor que deseja Sacar: ");
             this.saque = this.entradaDados.nextFloat();
-            valorTotal = valorTotal - saque;
-            mensagem(this.agencia, this.conta, this.nome, this.cpf);
+            if(saque > valorTotal){
+                System.out.println("O valor que deseja sacar é maior que seu saldo da conta!");
+            }else{
+                valorTotal = valorTotal - saque;
+            
+            }
+           mensagem("0226", this.conta, this.nome, this.cpf);
            
 
         } catch (Exception e) {
@@ -158,8 +158,9 @@ public class ClienteBanco extends Thread {
             this.nome = this.entradaDados.next();
             System.out.println("Informe seu CPF: ");
             this.cpf = this.entradaDados.next();
-            mensagem(this.agencia, this.conta, this.nome, this.cpf);
-            System.out.println("Seu saldo é: " + valorTotal);
+            mensagem("0226", this.conta, this.nome, this.cpf);
+            System.out.println("Extrato de: " + this.nome);
+            System.out.println("Seu saldo é de R$: " + valorTotal);
           
 
         } catch (Exception e) {
@@ -168,6 +169,64 @@ public class ClienteBanco extends Thread {
     }
     
     public String mensagem(String agencia, String conta, String nome, String cpf){
-        return "\nAgência: " + this.agencia + "; \n" + "N° conta: " + this.conta + "; \n" + "Nome CLiente: " + this.nome + "; \n" + "CPF: " + this.cpf + ";\n";
+        return "\nAgência: " + "0226" + "; \n" + "N° conta: " + this.conta + "; \n" + "Nome CLiente: " + this.nome + "; \n" + "CPF: " + this.cpf + ";\n";
     }
+
+    public String getAgencia() {
+        return agencia;
+    }
+
+    public void setAgencia(String agencia) {
+        this.agencia = agencia;
+    }
+
+    public String getConta() {
+        return conta;
+    }
+
+    public void setConta(String conta) {
+        this.conta = conta;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public float getDeposito() {
+        return deposito;
+    }
+
+    public void setDeposito(float deposito) {
+        this.deposito = deposito;
+    }
+
+    public float getSaque() {
+        return saque;
+    }
+
+    public void setSaque(float saque) {
+        this.saque = saque;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public float getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(float valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+    
+    
 }

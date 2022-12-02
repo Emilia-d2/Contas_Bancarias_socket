@@ -109,6 +109,7 @@ public class GerenteAgencia extends Thread {
             this.conta = this.entradaDados.next();
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
+            System.out.println("Você criou a conta de n°: " + this.conta);
             mensagem(this.conta, this.descricao);
         } catch (Exception e) {
             e.printStackTrace();
@@ -152,6 +153,7 @@ public class GerenteAgencia extends Thread {
             System.out.println("Atualize a descrição: ");
             this.descricao = this.entradaDados.next();
             this.conta = atualizaConta;
+            System.out.println("COnta de n° " + this.conta + " atualizada!");
             mensagem(this.conta, this.descricao);
         }else{
             System.out.println("Não foi possível atualizar sua conta! Tente novamente mais tarde");
