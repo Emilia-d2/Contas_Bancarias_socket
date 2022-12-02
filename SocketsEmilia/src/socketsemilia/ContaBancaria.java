@@ -17,7 +17,8 @@ import java.net.Socket;
 public class ContaBancaria extends Thread {
 
     public static void main(String args[]) {
-
+        
+        //Inicializa o ServerSocket da agencia
         ServerSocket conta = null;
         try {
             conta = new ServerSocket(40000);
@@ -26,7 +27,8 @@ public class ContaBancaria extends Thread {
             System.out.println("Aguardadndo cliente...                 |");
             System.out.println("---------------------------------------");
             while (true) {
-
+                
+                //Quando o cliente se conecta, a thread inicializa da conta bancaria.
                 Socket conexao = conta.accept();
                 System.out.println("Cliente se conectou: " + conexao.getInetAddress().getHostAddress());
                 Thread t = new ContaBancaria(conexao);
@@ -37,12 +39,15 @@ public class ContaBancaria extends Thread {
             System.out.println("IOException " + e);
         }
     }
+    
+    //Socket de conexao da agencia bancaria
     private Socket conexao;
-
     public ContaBancaria(Socket conta) {
         conexao = conta;
     }
 
+    //Inicializa o processo de comunicação das threads e do socket com o cliente
+    //Onde pega a entrada de dados e mostra no servidor a saida do que o cliente digitou
     public void run() {
 
         try {
@@ -56,10 +61,6 @@ public class ContaBancaria extends Thread {
             saida.writeUTF(clientedigitou);
             saida.flush();
         }
-
-           
-
-
         } catch (IOException e) {
             System.out.println("IOException " + e);
         }

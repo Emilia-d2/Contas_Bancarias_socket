@@ -19,7 +19,7 @@ import java.util.Scanner;
  */
 
 public class GerenteAgencia extends Thread {
-    
+    //Variaveis da classe
     private Scanner entradaDados;
     public String conta;
     List contas = new ArrayList();
@@ -31,7 +31,7 @@ public class GerenteAgencia extends Thread {
     public static void main(String args[]) {
 
         try {
-
+            //Inicializa a conexão e inicaliza a thread.
             Socket conexao = new Socket("localhost", 40001);
             System.out.println("Conectado na Agência... ");
             Thread t = new GerenteAgencia(conexao);
@@ -41,14 +41,16 @@ public class GerenteAgencia extends Thread {
             System.out.println("IOException" + e);
         }
     }
+    
+    //Socket de conexao do gerente bancario
     private Socket conexao;
-
     public GerenteAgencia(Socket agencia) {
         conexao = agencia;
     }
 
     public void run() {
         try {
+            //Inicializa o programa do gerente, sendo ele um menu 
             saida = new DataOutputStream(conexao.getOutputStream());
             teclado = new BufferedReader(new InputStreamReader(System.in));
             
@@ -80,6 +82,9 @@ public class GerenteAgencia extends Thread {
                if(opcao == 0){
                break;
                }
+               
+               //A partir da escolha do gerente irá retornar a mensagem com os dados 
+               //Essa mensagem vai ir para a agencia bancaria, no caso fazendo a comunicação
                String digito = mensagem(conta, descricao);
                 saida.writeUTF(digito);
                 saida.flush();
@@ -101,7 +106,7 @@ public class GerenteAgencia extends Thread {
         }
     }
     
-
+    //Funções
     public void criaConta() {
         try {
             this.entradaDados = new Scanner(System.in);
@@ -184,6 +189,7 @@ public class GerenteAgencia extends Thread {
         }
     }
     
+    //Mensagem do protocolo que vai retornar para a agencia bancaria
     public String mensagem(String conta, String descricao){
         return "\nAgência 0226 - n° Conta: " + this.conta + "; \n" + "Descição: " + this.descricao + "; \n";
     }

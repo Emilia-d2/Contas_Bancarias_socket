@@ -16,6 +16,7 @@ import java.util.Scanner;
  * @author milif
  */
 public class ClienteBanco extends Thread {
+    //Variaveis da classe
     private Scanner entradaDados;
     private String agencia;
     private String conta;
@@ -31,7 +32,7 @@ public class ClienteBanco extends Thread {
     public static void main(String args[]) {
 
         try {
-
+            //Inicializa a conexão e inicaliza a thread.
             Socket conexao = new Socket("localhost", 40000);
             System.out.println("Conectado em minha conta bancária... ");
             Thread t = new ClienteBanco(conexao);
@@ -41,13 +42,15 @@ public class ClienteBanco extends Thread {
             System.out.println("IOException" + e);
         }
     }
+    
+    //Socket de conexao do cliente
     private Socket conexao;
-
     public ClienteBanco(Socket conta) {
         conexao = conta;
     }
 
     public void run() {
+        //Inicializa o programa do cliente, sendo ele um menu 
         try {
             saida = new DataOutputStream(conexao.getOutputStream());
             teclado = new BufferedReader(new InputStreamReader(System.in));
@@ -82,6 +85,8 @@ public class ClienteBanco extends Thread {
                    
                    break;
                }
+                //A partir da escolha do cliente irá retornar a mensagem com os dados 
+                //Essa mensagem vai ir para a conta bancaria, no caso fazendo a comunicação
                 String digito = mensagem(agencia, conta, nome, cpf);
                 saida.writeUTF(digito);
                 saida.flush();
@@ -104,7 +109,7 @@ public class ClienteBanco extends Thread {
     }
     
     
-
+    //Funções
     public void deposito() {
         try {
             this.entradaDados = new Scanner(System.in);
@@ -168,6 +173,7 @@ public class ClienteBanco extends Thread {
         }
     }
     
+    //Mensagem de protocolo da conta bancaria
     public String mensagem(String agencia, String conta, String nome, String cpf){
         return "\nAgência: " + "0226" + "; \n" + "N° conta: " + this.conta + "; \n" + "Nome CLiente: " + this.nome + "; \n" + "CPF: " + this.cpf + ";\n";
     }
