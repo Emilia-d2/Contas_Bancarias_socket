@@ -5,6 +5,7 @@
 package socketsemilia;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,11 +23,12 @@ public class GerenteAgencia extends Thread {
     //Variaveis da classe
     private Scanner entradaDados;
     public String conta;
-    List contas = new ArrayList();
+    AgenciaBancaria agencia = new AgenciaBancaria();
     public String descricao;
     DataOutputStream saida;
     BufferedReader teclado;
     BufferedReader entrada;
+    private String tipoOperacao;
 
     public static void main(String args[]) {
 
@@ -85,12 +87,14 @@ public class GerenteAgencia extends Thread {
                
                //A partir da escolha do gerente irá retornar a mensagem com os dados 
                //Essa mensagem vai ir para a agencia bancaria, no caso fazendo a comunicação
-               String digito = mensagem(conta, descricao);
+                String digito = mensagem(tipoOperacao, conta, descricao);
                 saida.writeUTF(digito);
                 saida.flush();
 
-                entrada = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
-                entrada.readLine();
+                DataInputStream entradaRetorno = new DataInputStream(conexao.getInputStream());
+
+                String resposta = entradaRetorno.readUTF();
+                System.out.println(resposta);
             }
                 
             
@@ -110,12 +114,12 @@ public class GerenteAgencia extends Thread {
     public void criaConta() {
         try {
             this.entradaDados = new Scanner(System.in);
+            this.tipoOperacao = "4";
             System.out.println("Informe o n° da conta bancaria que deseja criar: ");
             this.conta = this.entradaDados.next();
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-            System.out.println("Você criou a conta de n°: " + this.conta);
-            mensagem(this.conta, this.descricao);
+            mensagem(this.tipoOperacao, this.conta, this.descricao);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -124,19 +128,13 @@ public class GerenteAgencia extends Thread {
     public void consultaConta() {
         try {
            this.entradaDados = new Scanner(System.in);
+           this.tipoOperacao = "5";
             System.out.println("Informe o n° da conta bancaria que deseja consultar: ");
             this.conta = this.entradaDados.next();
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-            mensagem(this.conta, this.descricao);
-            
-            String contaConsultada = this.conta;
-            
-            if(contaConsultada != null){
-                System.out.println("A conta que você consultou é essa: " + contaConsultada);
-            }else{
-                System.out.println("Não foi possível encontrar a essa conta consultada");
-            }
+            mensagem(this.tipoOperacao, this.conta, this.descricao);
+           
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -145,24 +143,12 @@ public class GerenteAgencia extends Thread {
     public void atualizaConta() {
         try {
             this.entradaDados = new Scanner(System.in);
+            this.tipoOperacao = "6";
             System.out.println("Informe o n° da conta bancaria que deseja atualizar: ");
             this.conta = this.entradaDados.next();
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-            mensagem(this.conta, this.descricao);
-        String contaAtualizar = this.conta;
-        if(contaAtualizar != null){
-            this.entradaDados = new Scanner(System.in);
-            System.out.println("Atualize o n° da conta : ");
-            String atualizaConta = this.entradaDados.next();
-            System.out.println("Atualize a descrição: ");
-            this.descricao = this.entradaDados.next();
-            this.conta = atualizaConta;
-            System.out.println("COnta de n° " + this.conta + " atualizada!");
-            mensagem(this.conta, this.descricao);
-        }else{
-            System.out.println("Não foi possível atualizar sua conta! Tente novamente mais tarde");
-        }
+            mensagem(this.tipoOperacao, this.conta, this.descricao);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,27 +157,21 @@ public class GerenteAgencia extends Thread {
     public void deletarConta() {
         try {
             this.entradaDados = new Scanner(System.in);
+            this.tipoOperacao = "7";
             System.out.println("Informe o n° da conta bancaria que deseja deletar: ");
             this.conta = this.entradaDados.next();
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-           mensagem(this.conta, this.descricao);
-        String deletarConta = this.conta;
-        if(deletarConta != null){
-            this.conta = "";
-            System.out.println("Informe a descrição: ");
-            this.descricao = this.entradaDados.next();
-            mensagem(this.conta, this.descricao);
-        }
-
+           mensagem(this.tipoOperacao, this.conta, this.descricao);
+ 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
     //Mensagem do protocolo que vai retornar para a agencia bancaria
-    public String mensagem(String conta, String descricao){
-        return "\nAgência 0226 - n° Conta: " + this.conta + "; \n" + "Descição: " + this.descricao + "; \n";
+    public String mensagem(String operacao, String conta, String descricao){
+        return this.tipoOperacao + ";" + "0226" + ";" +this.conta + ";" + this.descricao + ";" + "000" + ";" + 00.00 +"\n";
     }
 
 

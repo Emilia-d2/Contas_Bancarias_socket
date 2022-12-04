@@ -4,66 +4,94 @@
  */
 package socketsemilia;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.List;
+import java.util.Scanner;
+
+
 
 /**
  *
  * @author milif
  */
-public class ContaBancaria extends Thread {
+public class ContaBancaria{
+    private String nome;
+    private List<ContaBancaria> conta;
+    private double saldo;
+    AgenciaBancaria agencia = new AgenciaBancaria();
+    Scanner entrada = new Scanner(System.in);
 
-    public static void main(String args[]) {
+    
+    public void extrato(String conta){
+        System.out.println("\tEXTRATO");
+        System.out.printf("Saldo atual: %.2f\n",this.saldo);
+       
         
-        //Inicializa o ServerSocket da agencia
-        ServerSocket conta = null;
-        try {
-            conta = new ServerSocket(40000);
-            System.out.println("---------------------------------------");
-            System.out.println("BEM VINDO AO BANCO PAGUE BEM!          |");
-            System.out.println("Aguardadndo cliente...                 |");
-            System.out.println("---------------------------------------");
-            while (true) {
-                
-                //Quando o cliente se conecta, a thread inicializa da conta bancaria.
-                Socket conexao = conta.accept();
-                System.out.println("Cliente se conectou: " + conexao.getInetAddress().getHostAddress());
-                Thread t = new ContaBancaria(conexao);
-                t.start();
-
-            }
-        } catch (IOException e) {
-            System.out.println("IOException " + e);
+    }
+    
+    public void sacar(double valor){
+        if(saldo >= valor){
+            saldo -= valor;
+            System.out.println("Sacado R$ : " + valor);
+            System.out.println("Novo saldo R$ : " + saldo + "\n");
+        } else {
+            System.out.println("Saldo insuficiente. Faça um depósito\n");
         }
     }
     
-    //Socket de conexao da agencia bancaria
-    private Socket conexao;
-    public ContaBancaria(Socket conta) {
-        conexao = conta;
+    public void depositar(double valor)
+    {
+        saldo += valor;
+        System.out.println("Depositado R$ : " + valor);
+        System.out.println("Novo saldo R$ : " + saldo + "\n");
+    }
+    
+    public void criaConta(String conta){
+        agencia.setContas(this.conta);
+        System.out.println("Conta criada: " + agencia.getContas());
+    }
+    
+    public void atualizarConta(String conta){
+        agencia.setContas(this.conta);
+        System.out.println("Conta atualizada: " + this.conta);  
+    }
+     
+    public void ConsultarConta(String conta){
+        List<ContaBancaria> pegaConta = agencia.getContas();
+        System.out.println("Conta consultada: " + pegaConta);  
+           
+    }
+      
+    public void deletarConta(String conta){
+        System.out.println("Conta deletada: " + this.conta);
+               
+    }
+       
+    
+    public String getNome() {
+        return nome;
+    }
+    
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    //Inicializa o processo de comunicação das threads e do socket com o cliente
-    //Onde pega a entrada de dados e mostra no servidor a saida do que o cliente digitou
-    public void run() {
-
-        try {
-            while(true){
-            
-            DataInputStream entrada = new DataInputStream(conexao.getInputStream());
-            DataOutputStream saida = new DataOutputStream(conexao.getOutputStream());
-
-            String clientedigitou = entrada.readUTF();
-            System.out.println("Cliente Digitou: " + clientedigitou);
-            saida.writeUTF(clientedigitou);
-            saida.flush();
-        }
-        } catch (IOException e) {
-            System.out.println("IOException " + e);
-        }
-
+    public double getSaldo() {
+        return saldo;
     }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
+
+    public Scanner getEntrada() {
+        return entrada;
+    }
+
+    public void setEntrada(Scanner entrada) {
+        this.entrada = entrada;
+    }
+    
+    
+    
 }

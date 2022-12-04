@@ -5,6 +5,7 @@
 package socketsemilia;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,11 +21,10 @@ public class ClienteBanco extends Thread {
     private Scanner entradaDados;
     private String agencia;
     private String conta;
-    private String nome;         
+    private String nome;  
     private String cpf;
-    private float deposito;
-    private float saque;
-    private float valorTotal;
+    private float valor;
+    private String tipoOperacao;
     DataOutputStream saida;
     BufferedReader teclado;
     BufferedReader entrada;
@@ -33,7 +33,7 @@ public class ClienteBanco extends Thread {
 
         try {
             //Inicializa a conexão e inicaliza a thread.
-            Socket conexao = new Socket("localhost", 40000);
+            Socket conexao = new Socket("localhost", 40001);
             System.out.println("Conectado em minha conta bancária... ");
             Thread t = new ClienteBanco(conexao);
             t.start();
@@ -48,6 +48,7 @@ public class ClienteBanco extends Thread {
     public ClienteBanco(Socket conta) {
         conexao = conta;
     }
+
 
     public void run() {
         //Inicializa o programa do cliente, sendo ele um menu 
@@ -69,12 +70,12 @@ public class ClienteBanco extends Thread {
                 
                if(opcao == 1){
                     deposito();
-                    System.out.println("Depósito realizado com sucesso!");
+                    
                    
                }
                if(opcao == 2){
                    saque();
-                   System.out.println("Saque realizado com sucesso!");
+                   
                    
                }
                if(opcao == 3){
@@ -87,14 +88,17 @@ public class ClienteBanco extends Thread {
                }
                 //A partir da escolha do cliente irá retornar a mensagem com os dados 
                 //Essa mensagem vai ir para a conta bancaria, no caso fazendo a comunicação
-                String digito = mensagem(agencia, conta, nome, cpf);
+                String digito = mensagem(tipoOperacao, agencia, conta, nome, cpf, valor);
                 saida.writeUTF(digito);
                 saida.flush();
+                
+               
+                DataInputStream entradaRetorno = new DataInputStream(conexao.getInputStream());
 
-                entrada = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
-                entrada.readLine();
-            }
-            
+                String resposta = entradaRetorno.readUTF();
+                System.out.println(resposta);
+                
+        }    
            
            
         } catch (IOException e) {
@@ -113,6 +117,7 @@ public class ClienteBanco extends Thread {
     public void deposito() {
         try {
             this.entradaDados = new Scanner(System.in);
+            this.tipoOperacao = "1";
             System.out.println("Informe a conta bancaria: ");
             this.conta = this.entradaDados.next();
             System.out.println("Informe seu nome: ");
@@ -120,9 +125,8 @@ public class ClienteBanco extends Thread {
             System.out.println("Informe seu CPF: ");
             this.cpf = this.entradaDados.next();
             System.out.println("Informe o valor para deposito: ");
-            this.deposito = this.entradaDados.nextFloat();
-            valorTotal = deposito;
-            mensagem("0226", this.conta, this.nome, this.cpf);
+            this.valor = this.entradaDados.nextFloat();
+            mensagem(this.tipoOperacao, "0226", this.conta, this.nome, this.cpf, this.valor);
            
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,6 +136,7 @@ public class ClienteBanco extends Thread {
     public void saque() {
         try {
            this.entradaDados = new Scanner(System.in);
+            this.tipoOperacao = "2";
             System.out.println("Informe a conta bancaria: ");
             this.conta = this.entradaDados.next();
             System.out.println("Informe seu nome: ");
@@ -139,14 +144,8 @@ public class ClienteBanco extends Thread {
             System.out.println("Informe seu CPF: ");
             this.cpf = this.entradaDados.next();
             System.out.println("Informe o valor que deseja Sacar: ");
-            this.saque = this.entradaDados.nextFloat();
-            if(saque > valorTotal){
-                System.out.println("O valor que deseja sacar é maior que seu saldo da conta!");
-            }else{
-                valorTotal = valorTotal - saque;
-            
-            }
-           mensagem("0226", this.conta, this.nome, this.cpf);
+            this.valor = this.entradaDados.nextFloat();
+           mensagem(this.tipoOperacao, "0226", this.conta, this.nome, this.cpf, this.valor);
            
 
         } catch (Exception e) {
@@ -156,16 +155,15 @@ public class ClienteBanco extends Thread {
 
     public void extrato() {
         try {
-           this.entradaDados = new Scanner(System.in);
+            this.entradaDados = new Scanner(System.in);
+            this.tipoOperacao = "3";
             System.out.println("Informe a conta bancaria: ");
             this.conta = this.entradaDados.next();
             System.out.println("Informe seu nome: ");
             this.nome = this.entradaDados.next();
             System.out.println("Informe seu CPF: ");
             this.cpf = this.entradaDados.next();
-            mensagem("0226", this.conta, this.nome, this.cpf);
-            System.out.println("Extrato de: " + this.nome);
-            System.out.println("Seu saldo é de R$: " + valorTotal);
+            mensagem(this.tipoOperacao, "0226", this.conta, this.nome, this.cpf, this.valor);
           
 
         } catch (Exception e) {
@@ -174,8 +172,8 @@ public class ClienteBanco extends Thread {
     }
     
     //Mensagem de protocolo da conta bancaria
-    public String mensagem(String agencia, String conta, String nome, String cpf){
-        return "\nAgência: " + "0226" + "; \n" + "N° conta: " + this.conta + "; \n" + "Nome CLiente: " + this.nome + "; \n" + "CPF: " + this.cpf + ";\n";
+    public String mensagem(String operacao, String agencia, String conta, String nome, String cpf, float valor){
+        return this.tipoOperacao + ";" + "0226" + ";"  + this.conta + ";" + this.nome + ";" + this.cpf + ";" + this.valor + "\n";
     }
 
     public String getAgencia() {
@@ -201,37 +199,13 @@ public class ClienteBanco extends Thread {
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
-
-    public float getDeposito() {
-        return deposito;
-    }
-
-    public void setDeposito(float deposito) {
-        this.deposito = deposito;
-    }
-
-    public float getSaque() {
-        return saque;
-    }
-
-    public void setSaque(float saque) {
-        this.saque = saque;
-    }
-
+    
     public String getNome() {
         return nome;
     }
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public float getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(float valorTotal) {
-        this.valorTotal = valorTotal;
     }
     
     
