@@ -13,10 +13,12 @@ import java.util.List;
  * @author milif
  */
 public class AgenciaBancaria {
+    //Variáveis da agencia, deixando a lista de contas dentro de agencia
     public ArrayList<String> contas = new ArrayList<>();
     String descricao;
     String numeroAgencia = "0226";
 
+    //Getters e Setters
     public String getDescricao() {
         return descricao;
     }

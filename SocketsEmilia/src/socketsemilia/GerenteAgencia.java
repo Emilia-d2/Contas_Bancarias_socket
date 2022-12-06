@@ -87,13 +87,14 @@ public class GerenteAgencia extends Thread {
                }
                
                //A partir da escolha do gerente irá retornar a mensagem com os dados 
-               //Essa mensagem vai ir para a agencia bancaria, no caso fazendo a comunicação
-                String digito = mensagem(tipoOperacao, conta, descricao, contaBancaria.getSaldo());
+               //Essa mensagem vai ir para o server, no caso fazendo a comunicação
+                String digito = mensagem(tipoOperacao, this.getConta(), descricao);
                 saida.writeUTF(digito);
                 saida.flush();
 
+                //Dados de entrada de dados do server, onde ele retorna se deu certo a operação
+                // ou se não deu certo, fazendo a comunicação.
                 DataInputStream entradaRetorno = new DataInputStream(conexao.getInputStream());
-
                 String resposta = entradaRetorno.readUTF();
                 System.out.println(resposta);
             }
@@ -111,71 +112,79 @@ public class GerenteAgencia extends Thread {
         }
     }
     
-    //Funções
+    //Função de Criar conta bancária
     public void criaConta() {
         try {
             this.entradaDados = new Scanner(System.in);
             this.tipoOperacao = "4";
             System.out.println("Informe o n° da conta bancaria que deseja criar: ");
             this.conta = this.entradaDados.next();
+            this.setConta(conta);
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-            mensagem(this.tipoOperacao, this.conta, this.descricao, contaBancaria.getSaldo());
+            mensagem(this.tipoOperacao, this.getConta(), this.descricao);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    
+    //Função de consultar conta bancária
     public void consultaConta() {
         try {
            this.entradaDados = new Scanner(System.in);
            this.tipoOperacao = "5";
             System.out.println("Informe o n° da conta bancaria que deseja consultar: ");
             this.conta = this.entradaDados.next();
+            this.setConta(conta);
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-            mensagem(this.tipoOperacao, this.conta, this.descricao, contaBancaria.getSaldo());
+            mensagem(this.tipoOperacao, this.getConta(), this.descricao);
            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    
+    //Função de atualizar conta bancária
     public void atualizaConta() {
         try {
             this.entradaDados = new Scanner(System.in);
             this.tipoOperacao = "6";
             System.out.println("Informe o n° da conta bancaria que deseja atualizar: ");
             this.conta = this.entradaDados.next();
+            this.setConta(conta);
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-            mensagem(this.tipoOperacao, this.conta, this.descricao, contaBancaria.getSaldo());
+            mensagem(this.tipoOperacao, this.getConta(), this.descricao);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
+    //Função de deletar conta bancária
     public void deletarConta() {
         try {
             this.entradaDados = new Scanner(System.in);
             this.tipoOperacao = "7";
             System.out.println("Informe o n° da conta bancaria que deseja deletar: ");
             this.conta = this.entradaDados.next();
+            this.setConta(conta);
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-           mensagem(this.tipoOperacao, this.conta, this.descricao, contaBancaria.getSaldo());
+           mensagem(this.tipoOperacao, this.getConta(), this.descricao);
  
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
-    //Mensagem do protocolo que vai retornar para a agencia bancaria
-    public String mensagem(String operacao, String conta, String descricao, double saldo){
-        return this.tipoOperacao + ";" + "0226" + ";" +this.conta + ";" + this.descricao + ";" + "000" + ";" + contaBancaria.getSaldo();
+    //Mensagem do protocolo que vai retornar para o server.
+    public String mensagem(String operacao, String conta, String descricao){
+        return this.tipoOperacao + ";" + "0226" + ";" + this.getConta() + ";" + this.descricao + ";" + "000" + ";" + contaBancaria.getSaldo() + "\n";
     }
 
-
+    
+    //Getters e Setters.
     public String getDescricao() {
         return descricao;
     }
@@ -183,6 +192,15 @@ public class GerenteAgencia extends Thread {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
+    public String getConta() {
+        return conta;
+    }
+
+    public void setConta(String conta) {
+        agencia.contas.add(conta);
+    }
+    
     
     
 }

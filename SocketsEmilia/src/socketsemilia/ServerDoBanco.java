@@ -16,6 +16,7 @@ import java.nio.Buffer;
  * @author milif
  */
 public class ServerDoBanco extends Thread {
+    //Inicializa agencia e conta para fazer conexoes
     AgenciaBancaria agencia = new AgenciaBancaria();
     ContaBancaria contaBancaria = new ContaBancaria();
 
@@ -31,7 +32,7 @@ public class ServerDoBanco extends Thread {
             System.out.println("---------------------------------------");
             while (true) {
                 
-                //Quando o gerente se conecta, a thread inicializa da agencia bacaria.
+                //Quando o gerente ou o cliente se conecta, a thread inicializa.
                 Socket conexao = server.accept();
                 System.out.println("Alguém se conectou: " + conexao.getInetAddress().getHostAddress());
                 Thread t = new ServerDoBanco(conexao);
@@ -49,8 +50,8 @@ public class ServerDoBanco extends Thread {
         conexao = server;
     }
     
-    //Inicializa o processo de comunicação das threads e do socket com o gerente
-    //Onde pega a entrada de dados e mostra no servidor a saida do que o gerente digitou
+    //Inicializa o processo de comunicação das threads e do socket com o gerente ou cliente
+    //Onde pega a entrada de dados e mostra no servidor a saida do que o gerente ou o cliente digitou
     public void run() {
 
         try {
@@ -60,7 +61,6 @@ public class ServerDoBanco extends Thread {
 
             String digitou = entrada.readUTF();
             System.out.println("Alguém Digitou: " + digitou);
-            //saida.writeUTF(digitou);
             
             //Parametros de cliente
             //Parametro 1 operacao
@@ -77,15 +77,18 @@ public class ServerDoBanco extends Thread {
             String param5 = vet[4];
             String param6 = vet[5];
             
-            
+            //Lógica para verificar qual operação vai ser
+            /* 1-Depositar | 2-Sacar | 3-extrato | 4-Criar Conta
+               5-Consultar conta | 6-atualizar Conta | 7-Deletar Conta
+            */
             if("1".equals(param1)){
                 saida.writeUTF("Deposito realizado com sucesso!");
-                contaBancaria.depositar(Double.parseDouble(param6));
+                contaBancaria.depositar(Double.parseDouble(param6), param3);
                
             }
             if("2".equals(param1)){
                 saida.writeUTF("Saque realizado com sucesso!");
-                contaBancaria.sacar(Double.parseDouble(param6));
+                contaBancaria.sacar(Double.parseDouble(param6), param3);
                 
             }
             if("3".equals(param1)){

@@ -28,7 +28,9 @@ public class ClienteBanco extends Thread {
     DataOutputStream saida;
     BufferedReader teclado;
     BufferedReader entrada;
-
+    AgenciaBancaria agenciaBancaria = new AgenciaBancaria();
+    
+    
     public static void main(String args[]) {
 
         try {
@@ -57,6 +59,8 @@ public class ClienteBanco extends Thread {
             saida = new DataOutputStream(conexao.getOutputStream());
             teclado = new BufferedReader(new InputStreamReader(System.in));
             
+            
+            //manu de escolhas para triar o que vai ser feito
             int opcao = 1;
             while(opcao != 0) {
                 this.entradaDados = new Scanner(System.in);
@@ -87,21 +91,19 @@ public class ClienteBanco extends Thread {
                    
                    break;
                }
+                
                 //A partir da escolha do cliente irá retornar a mensagem com os dados 
-                //Essa mensagem vai ir para a conta bancaria, no caso fazendo a comunicação
-                String digito = mensagem(tipoOperacao, agencia, conta, nome, cpf, valor);
+                //Essa mensagem vai ir para o server, no caso fazendo a comunicação
+                String digito = mensagem(tipoOperacao, agencia, this.getConta(), nome, cpf, valor);
                 saida.writeUTF(digito);
                 saida.flush();
                 
-               
+               //Retorno que vem do server como String, dizendo se deu certo a operação
                 DataInputStream entradaRetorno = new DataInputStream(conexao.getInputStream());
-
                 String resposta = entradaRetorno.readUTF();
                 System.out.println(resposta);
                 
-        }    
-           
-           
+        }        
         } catch (IOException e) {
             System.out.println("IOException" + e);
         } finally {
@@ -114,57 +116,61 @@ public class ClienteBanco extends Thread {
     }
     
     
-    //Funções
+    //Função de depósito
     public void deposito() {
         try {
             this.entradaDados = new Scanner(System.in);
             this.tipoOperacao = "1";
             System.out.println("Informe a conta bancaria: ");
             this.conta = this.entradaDados.next();
+            this.setConta(conta);
             System.out.println("Informe seu nome: ");
             this.nome = this.entradaDados.next();
             System.out.println("Informe seu CPF: ");
             this.cpf = this.entradaDados.next();
             System.out.println("Informe o valor para deposito: ");
             this.valor = this.entradaDados.nextFloat();
-            mensagem(this.tipoOperacao, "0226", this.conta, this.nome, this.cpf, this.valor);
+            mensagem(this.tipoOperacao, "0226", this.getConta(), this.nome, this.cpf, this.valor);
            
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    //Função de saque
     public void saque() {
         try {
            this.entradaDados = new Scanner(System.in);
             this.tipoOperacao = "2";
             System.out.println("Informe a conta bancaria: ");
             this.conta = this.entradaDados.next();
+            this.setConta(conta);
             System.out.println("Informe seu nome: ");
             this.nome = this.entradaDados.next();
             System.out.println("Informe seu CPF: ");
             this.cpf = this.entradaDados.next();
             System.out.println("Informe o valor que deseja Sacar: ");
             this.valor = this.entradaDados.nextFloat();
-            mensagem(this.tipoOperacao, "0226", this.conta, this.nome, this.cpf, this.valor);
+            mensagem(this.tipoOperacao, "0226", this.getConta(), this.nome, this.cpf, this.valor);
            
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    
+    //Função de extrato
     public void extrato() {
         try {
             this.entradaDados = new Scanner(System.in);
             this.tipoOperacao = "3";
             System.out.println("Informe a conta bancaria: ");
             this.conta = this.entradaDados.next();
+            this.setConta(conta);
             System.out.println("Informe seu nome: ");
             this.nome = this.entradaDados.next();
             System.out.println("Informe seu CPF: ");
             this.cpf = this.entradaDados.next();
-            mensagem(this.tipoOperacao, "0226", this.conta, this.nome, this.cpf, this.valor);
+            mensagem(this.tipoOperacao, "0226", this.getConta(), this.nome, this.cpf, this.valor);
           
 
         } catch (Exception e) {
@@ -172,25 +178,18 @@ public class ClienteBanco extends Thread {
         }
     }
     
-    //Mensagem de protocolo da conta bancaria
+    //Mensagem de protocolo que vai ir até o server.
     public String mensagem(String operacao, String agencia, String conta, String nome, String cpf, float valor){
-        return this.tipoOperacao + ";" + "0226" + ";"  + this.conta + ";" + this.nome + ";" + this.cpf + ";" + this.valor + "\n";
+        return this.tipoOperacao + ";" + "0226" + ";"  + this.getConta() + ";" + this.nome + ";" + this.cpf + ";" + this.valor + "\n";
     }
 
+    //Getters e Setters
     public String getAgencia() {
         return agencia;
     }
 
     public void setAgencia(String agencia) {
         this.agencia = agencia;
-    }
-
-    public String getConta() {
-        return conta;
-    }
-
-    public void setConta(String conta) {
-        this.conta = conta;
     }
 
     public String getCpf() {
@@ -208,6 +207,16 @@ public class ClienteBanco extends Thread {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public String getConta() {
+        return conta;
+    }
+
+    public void setConta(String conta) {
+        agenciaBancaria.contas.add(conta);
+    }
+    
+    
     
     
 }
