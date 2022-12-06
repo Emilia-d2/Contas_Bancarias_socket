@@ -24,6 +24,7 @@ public class GerenteAgencia extends Thread {
     private Scanner entradaDados;
     public String conta;
     AgenciaBancaria agencia = new AgenciaBancaria();
+    ContaBancaria contaBancaria = new ContaBancaria();
     public String descricao;
     DataOutputStream saida;
     BufferedReader teclado;
@@ -87,7 +88,7 @@ public class GerenteAgencia extends Thread {
                
                //A partir da escolha do gerente irá retornar a mensagem com os dados 
                //Essa mensagem vai ir para a agencia bancaria, no caso fazendo a comunicação
-                String digito = mensagem(tipoOperacao, conta, descricao);
+                String digito = mensagem(tipoOperacao, conta, descricao, contaBancaria.getSaldo());
                 saida.writeUTF(digito);
                 saida.flush();
 
@@ -119,7 +120,7 @@ public class GerenteAgencia extends Thread {
             this.conta = this.entradaDados.next();
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-            mensagem(this.tipoOperacao, this.conta, this.descricao);
+            mensagem(this.tipoOperacao, this.conta, this.descricao, contaBancaria.getSaldo());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -133,7 +134,7 @@ public class GerenteAgencia extends Thread {
             this.conta = this.entradaDados.next();
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-            mensagem(this.tipoOperacao, this.conta, this.descricao);
+            mensagem(this.tipoOperacao, this.conta, this.descricao, contaBancaria.getSaldo());
            
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,7 +149,7 @@ public class GerenteAgencia extends Thread {
             this.conta = this.entradaDados.next();
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-            mensagem(this.tipoOperacao, this.conta, this.descricao);
+            mensagem(this.tipoOperacao, this.conta, this.descricao, contaBancaria.getSaldo());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -162,7 +163,7 @@ public class GerenteAgencia extends Thread {
             this.conta = this.entradaDados.next();
             System.out.println("Informe a descrição: ");
             this.descricao = this.entradaDados.next();
-           mensagem(this.tipoOperacao, this.conta, this.descricao);
+           mensagem(this.tipoOperacao, this.conta, this.descricao, contaBancaria.getSaldo());
  
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,8 +171,8 @@ public class GerenteAgencia extends Thread {
     }
     
     //Mensagem do protocolo que vai retornar para a agencia bancaria
-    public String mensagem(String operacao, String conta, String descricao){
-        return this.tipoOperacao + ";" + "0226" + ";" +this.conta + ";" + this.descricao + ";" + "000" + ";" + 00.00 +"\n";
+    public String mensagem(String operacao, String conta, String descricao, double saldo){
+        return this.tipoOperacao + ";" + "0226" + ";" +this.conta + ";" + this.descricao + ";" + "000" + ";" + contaBancaria.getSaldo();
     }
 
 

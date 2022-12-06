@@ -4,6 +4,7 @@
  */
 package socketsemilia;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @author milif
  */
 public class AgenciaBancaria {
-    List <ContaBancaria> contas;
+    public ArrayList<String> contas = new ArrayList<>();
     String descricao;
     String numeroAgencia = "0226";
 
@@ -31,15 +32,5 @@ public class AgenciaBancaria {
     public void setNumeroAgencia(String numeroAgencia) {
         this.numeroAgencia = numeroAgencia;
     }
-
-    public List<ContaBancaria> getContas() {
-        return contas;
-    }
-
-    public void setContas(List<ContaBancaria> contas) {
-        this.contas = contas;
-    }
-    
-    
 
 }

@@ -50,6 +50,7 @@ public class ClienteBanco extends Thread {
     }
 
 
+
     public void run() {
         //Inicializa o programa do cliente, sendo ele um menu 
         try {
@@ -145,7 +146,7 @@ public class ClienteBanco extends Thread {
             this.cpf = this.entradaDados.next();
             System.out.println("Informe o valor que deseja Sacar: ");
             this.valor = this.entradaDados.nextFloat();
-           mensagem(this.tipoOperacao, "0226", this.conta, this.nome, this.cpf, this.valor);
+            mensagem(this.tipoOperacao, "0226", this.conta, this.nome, this.cpf, this.valor);
            
 
         } catch (Exception e) {
